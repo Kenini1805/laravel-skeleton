@@ -29,7 +29,7 @@ Once installed, the `laravel-skeleton run` command will create a laravel skeleto
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Framgia Vietnam Ltd.
+Copyright (c) 2017 Framgia Vietnam Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
