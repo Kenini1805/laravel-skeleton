@@ -53,7 +53,7 @@ class RunCommand extends Command
 
         $composer = $this->findComposer();
         $commands = [
-            $composer.' install --no-scripts',
+            $composer.' update',
         ];
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
@@ -74,7 +74,7 @@ class RunCommand extends Command
      */
     protected function removeUserModel($directory)
     {
-        $modelFile = $directory . 'app/User.php';
+        $modelFile = $directory . '/app/User.php';
 
         if (is_file($modelFile)) {
             @chmod($modelFile, 0777);
