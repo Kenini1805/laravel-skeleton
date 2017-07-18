@@ -11,7 +11,7 @@ Install via **Laravel Skeleton Maker**
 
 - First, download using composer
 
-```
+```bash
 composer global require "framgia/laravel-skeleton"
 ```
 
@@ -19,7 +19,12 @@ Make sure to place the `$HOME/.composer/vendor/bin` directory (or the equivalent
 
 Once installed, the `laravel-skeleton run` command will create a laravel skeleton in the directory you specify.
 
-
+- Options:
+```bash
+      --with-docker     Init with docker-compose file
+      --docker-only     Init docker-compose file only
+```
+      
 ## License
 
 The MIT License (MIT)

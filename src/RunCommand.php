@@ -26,7 +26,9 @@ class RunCommand extends Command
         $this
             ->setName('run')
             ->setDescription('Create a new Laravel skeleton application.')
-            ->addArgument('name', InputArgument::OPTIONAL);
+            ->addArgument('name', InputArgument::OPTIONAL)
+            ->addOption('with-docker', null, InputOption::VALUE_NONE, 'Init with docker-compose file')
+            ->addOption('docker-only', null, InputOption::VALUE_NONE, 'Init docker-compose file only');
     }
 
     /**
@@ -44,27 +46,37 @@ class RunCommand extends Command
 
         $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();
 
-        $output->writeln('<info>Creating Laravel skeleton...</info>');
-
-        $this->download($zipFile = $this->makeFilename())
-            ->extract($zipFile, $directory)
-            ->removeUserModel($directory)
-            ->cleanUp($zipFile);
-
-        $composer = $this->findComposer();
-        $commands = [
-            $composer.' update',
-        ];
-
-        $process = new Process(implode(' && ', $commands), $directory, null, null, null);
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
-            $process->setTty(true);
+        if ($input->getOption('with-docker') || $input->getOption('docker-only')) {
+            $output->writeln('<info>Creating docker-compose...</info>');
+            $this->makeDocker($directory, $input);
+            $output->writeln('<comment>Done!</comment>');
         }
-        $process->run(function ($type, $line) use ($output) {
-            $output->write($line);
-        });
 
-        $output->writeln('<comment>Done! Do something!</comment>');
+        if (!$input->getOption('docker-only')) {
+            $output->writeln('<info>Creating Laravel skeleton...</info>');
+
+            $this->download($zipFile = $this->makeFilename())
+                ->extract($zipFile, $directory)
+                ->removeUserModel($directory)
+                ->cleanUp($zipFile);
+
+            $composer = $this->findComposer();
+            $commands = [
+                $composer.' update',
+            ];
+
+            $process = new Process(implode(' && ', $commands), $directory, null, null, null);
+            if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
+                $process->setTty(true);
+            }
+            $process->run(
+                function ($type, $line) use ($output) {
+                    $output->write($line);
+                }
+            );
+
+            $output->writeln('<comment>Done! Do something!</comment>');
+        }
     }
 
     /**
@@ -101,9 +113,9 @@ class RunCommand extends Command
      * @param  string  $version
      * @return $this
      */
-    protected function download($zipFile)
+    protected function download($zipFile, $url = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/skeleton.zip')
     {
-        $response = (new Client)->get('https://raw.githubusercontent.com/framgia/laravel-skeleton/master/skeleton.zip');
+        $response = (new Client)->get($url);
         file_put_contents($zipFile, $response->getBody());
 
         return $this;
@@ -151,5 +163,39 @@ class RunCommand extends Command
             return '"'.PHP_BINARY.'" composer.phar';
         }
         return 'composer';
+    }
+
+    /**
+     * @param $directory
+     */
+    protected function makeDocker($directory, InputInterface $input)
+    {
+        $url = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/docker.zip';
+        $this->download($zipFile = $this->makeDockerFilename(), $url)
+            ->extract($zipFile, $directory)
+            ->cleanUp($zipFile);
+
+        //create docker-compose.yml file
+        $response = (new Client)->get('https://raw.githubusercontent.com/framgia/laravel-skeleton/master/docker-compose.yml.sample');
+        $fileContent = $response->getBody();
+
+        $name = ($input->getArgument('name')) ? $input->getArgument('name') : md5(time().uniqid());
+
+        $fileContent = str_replace('{project_name}', $name, $fileContent);
+
+        $dockerComposeFile = $directory . '/docker-compose.yml';
+        file_put_contents($dockerComposeFile, $fileContent);
+
+        return $this;
+    }
+
+    /**
+     * Generate a random temporary filename.
+     *
+     * @return string
+     */
+    protected function makeDockerFilename()
+    {
+        return getcwd().'/docker_'.md5(time().uniqid()).'.zip';
     }
 }

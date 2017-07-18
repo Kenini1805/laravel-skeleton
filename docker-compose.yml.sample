@@ -1,0 +1,92 @@
+version: '2'
+
+services:
+    application:
+        container_name: {project_name}_application
+        image: debian
+        volumes:
+            - ./:/var/www/laravel
+            - ~/.ssh:/root/.ssh
+    workspace:
+        container_name: conomin_workspace
+        build:
+            context: ./.docker
+            dockerfile: Dockerfile.workspace
+        restart: always
+        volumes_from:
+            - application
+        tty: true
+    php-fpm:
+        container_name: {project_name}_php-fpm
+        build:
+            context: ./.docker
+            dockerfile: Dockerfile.php-fpm
+        restart: always
+        volumes_from:
+            - data
+            - application
+            - phpmyadmin
+        expose:
+            - "9000"
+        links:
+            - workspace
+            - mysql
+            - redis
+        environment:
+            PMA_HOST: mysql
+    nginx:
+        container_name: {project_name}_nginx
+        restart: always
+        tty: true
+        build:
+            context: ./.docker
+            dockerfile: Dockerfile.nginx
+        volumes_from:
+            - data
+            - application
+            - phpmyadmin
+        ports:
+            - "80:80"
+        links:
+            - php-fpm
+            - mysql
+            - redis
+    data:
+        container_name: {project_name}_data
+        image: debian
+        volumes:
+            - .docker/data/data:/data
+            - .docker/data/nginx:/var/log/nginx
+            - .docker/data/php-fpm:/var/log/php-fpm
+            - .docker/data/mysql/data:/var/lib/mysql
+            - .docker/data/mysql/log:/var/log/mysql
+    mysql:
+        container_name: {project_name}_mysql
+        restart: always
+        image: mysql:5.7
+        volumes_from:
+            - data
+        expose:
+            - "3306"
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: {project_name}
+            MYSQL_USER: {project_name}
+            MYSQL_PASSWORD: {project_name}
+            MYSQL_ROOT_PASSWORD: root
+    redis:
+        container_name: {project_name}_redis
+        restart: always
+        image: redis
+        expose:
+            - "6379"
+        volumes_from:
+            - data
+        ports:
+            - "6379:6379"
+    phpmyadmin:
+        container_name: {project_name}_phpmyadmin
+        build:
+            context: ./.docker
+            dockerfile: Dockerfile.phpmyadmin
