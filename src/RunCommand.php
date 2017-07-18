@@ -51,6 +51,19 @@ class RunCommand extends Command
             ->removeUserModel($directory)
             ->cleanUp($zipFile);
 
+        $composer = $this->findComposer();
+        $commands = [
+            $composer.' install --no-scripts',
+        ];
+
+        $process = new Process(implode(' && ', $commands), $directory, null, null, null);
+        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
+            $process->setTty(true);
+        }
+        $process->run(function ($type, $line) use ($output) {
+            $output->write($line);
+        });
+
         $output->writeln('<comment>Done! Do something!</comment>');
     }
 
@@ -125,5 +138,18 @@ class RunCommand extends Command
         @unlink($zipFile);
 
         return $this;
+    }
+
+    /**
+     * Get the composer command for the environment.
+     *
+     * @return string
+     */
+    protected function findComposer()
+    {
+        if (file_exists(getcwd().'/composer.phar')) {
+            return '"'.PHP_BINARY.'" composer.phar';
+        }
+        return 'composer';
     }
 }
