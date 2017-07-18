@@ -1,7 +1,7 @@
 {
   "name": "framgia/laravel-skeleton",
   "description": "Laravel skeleton application installer.",
-  "keywords": ["framgia", "laravel", "skeleton"],
+  "keywords": ["framgia", "laravel", "skeleton", "docker", "docker-compose"],
   "license": "MIT",
   "authors": [
     {
