@@ -21,6 +21,7 @@
     "symfony/filesystem": "~2.3|~3.0",
     "symfony/process": "~2.3|~3.0"
   },
+  "minimum-stability": "dev",
   "bin": [
     "laravel-skeleton"
   ]
