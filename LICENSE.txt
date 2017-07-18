@@ -1,27 +1,3 @@
-# Laravel Skeleton maker
-
-## Installation
-
-To install this package you will need:
-
-* Laravel 5.2+
-* PHP 5.5.9+ (Laravel dependency)
-
-Install via **Laravel Skeleton Maker**
-
-- First, download using composer
-
-```
-composer global require "framgia/laravel-skeleton"
-```
-
-Make sure to place the `$HOME/.composer/vendor/bin` directory (or the equivalent directory for your OS) in your `$PATH` so the `laravel-skeleton` executable can be located by your system.
-
-Once installed, the `laravel-skeleton run` command will create a laravel skeleton in the directory you specify.
-
-
-## License
-
 The MIT License (MIT)
 
 Copyright (c) 2016 Framgia Vietnam Ltd.
