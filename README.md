@@ -5,7 +5,6 @@
 To install this package you will need:
 
 * Laravel 5.2+
-* PHP 5.5.9+ (Laravel dependency)
 
 Install via **Laravel Skeleton Maker**
 
@@ -23,6 +22,86 @@ Once installed, the `laravel-skeleton run` command will create a laravel skeleto
 ```bash
       --with-docker     Init with docker-compose file
       --docker-only     Init docker-compose file only
+```
+
+- Folder structure
+
+```bash
+app
+├── Console
+│   └── Kernel.php
+├── Exceptions
+│   └── Handler.php
+├── Helpers
+│   ├── ApiHelper.php
+│   └── FormHelper.php
+├── Http
+│   ├── Controllers
+│   │   ├── Admin
+│   │   │   ├── BaseController.php
+│   │   │   └── HomeController.php
+│   │   ├── Api
+│   │   │   ├── BaseController.php
+│   │   │   └── UsersController.php
+│   │   ├── Auth
+│   │   │   ├── ForgotPasswordController.php
+│   │   │   ├── LoginController.php
+│   │   │   ├── RegisterController.php
+│   │   │   └── ResetPasswordController.php
+│   │   ├── Controller.php
+│   │   └── Web
+│   │       ├── BaseController.php
+│   │       └── HomeController.php
+│   ├── Kernel.php
+│   ├── Middleware
+│   │   ├── AdminAuthenticate.php
+│   │   ├── EncryptCookies.php
+│   │   ├── RedirectIfAuthenticated.php
+│   │   ├── TrimStrings.php
+│   │   └── VerifyCsrfToken.php
+│   └── Requests
+│       ├── Api
+│       │   ├── BaseRequest.php
+│       │   ├── UserRegisterRequest.php
+│       │   └── UserUpdateRequest.php
+│       └── Web
+│           └── BaseRequest.php
+├── Mail
+│   └── WelcomeMail.php
+├── Models
+│   ├── Filters
+│   │   ├── BaseFilter.php
+│   │   └── FilterInterface.php
+│   ├── Traits
+│   │   └── ApiScopes.php
+│   └── User.php
+├── Providers
+│   ├── AppServiceProvider.php
+│   ├── AuthServiceProvider.php
+│   ├── BroadcastServiceProvider.php
+│   ├── EventServiceProvider.php
+│   ├── RouteServiceProvider.php
+│   └── ServicesBindingProvider.php
+└── Services
+    ├── Api
+    │   ├── BaseService.php
+    │   ├── Contracts
+    │   │   ├── BaseServiceInterface.php
+    │   │   ├── CanSortAndFilter.php
+    │   │   └── UserServiceInterface.php
+    │   ├── Pagination
+    │   │   └── ApiPaginator.php
+    │   ├── UserService.php
+    │   └── Values
+    │       └── ApiParam.php
+    ├── Helpers
+    │   └── EmailService.php
+    └── Web
+        ├── BaseService.php
+        ├── Contracts
+        │   ├── BaseServiceInterface.php
+        │   └── UserServiceInterface.php
+        └── UserService.php
 ```
       
 ## License
