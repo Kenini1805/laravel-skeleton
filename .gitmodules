@@ -1,0 +1,3 @@
+[submodule "laravel-base"]
+	path = laravel-base
+	url = git@github.com:TungPro/laravel-base.git
