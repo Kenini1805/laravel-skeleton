@@ -4,7 +4,7 @@
 
 To install this package you will need:
 
-* Laravel 5.2+
+* Laravel 5.4+
 
 Install via **Laravel Skeleton Maker**
 
@@ -67,7 +67,9 @@ app
 │       └── Web
 │           └── BaseRequest.php
 ├── Mail
-│   └── WelcomeMail.php
+│   ├── BaseMail.php
+│   └── User
+│       └── WelcomeMail.php
 ├── Models
 │   ├── Filters
 │   │   ├── BaseFilter.php
@@ -102,6 +104,33 @@ app
         │   ├── BaseServiceInterface.php
         │   └── UserServiceInterface.php
         └── UserService.php
+ 
+ resources
+ ├── assets
+ │   ├── js
+ │   │   ├── app.js
+ │   │   ├── bootstrap.js
+ │   │   └── components
+ │   │       └── Example.vue
+ │   └── sass
+ │       ├── _variables.scss
+ │       └── app.scss
+ ├── lang
+ │   └── en
+ │       ├── auth.php
+ │       ├── pagination.php
+ │       ├── passwords.php
+ │       └── validation.php
+ └── views
+     ├── admin
+     │   └── welcome.blade.php
+     ├── emails
+     │   └── en
+     │       └── user
+     │           └── welcome.blade.php
+     ├── web
+     │   └── welcome.blade.php
+     └── welcome.blade.php
 ```
       
 ## License
