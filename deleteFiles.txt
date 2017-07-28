@@ -1,0 +1,3 @@
+public/css/app.css
+public/js/app.js
+resources/assets/js/components/Example.vue

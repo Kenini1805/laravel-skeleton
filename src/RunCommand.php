@@ -56,6 +56,7 @@ class RunCommand extends Command
             $output->writeln('<info>Creating Laravel skeleton...</info>');
 
             $this->download($zipFile = $this->makeFilename())
+                ->removeFiles($directory)
                 ->extract($zipFile, $directory)
                 ->removeUserModel($directory)
                 ->cleanUp($zipFile);
@@ -77,6 +78,29 @@ class RunCommand extends Command
 
             $output->writeln('<comment>Done! Do something!</comment>');
         }
+    }
+
+    /**
+     * Delete old model User.php
+     *
+     * @return $this
+     */
+    protected function removeFiles($directory)
+    {
+        $deleteFileUrl = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/deleteFiles.txt';
+        $deleteFile = file_get_contents($deleteFileUrl);
+
+        $files = preg_split('/\r\n|\r|\n/', $deleteFile, -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($files as $file) {
+            if (!empty($file)) {
+                $fileDelete = $directory . '/' . $file;
+                @chmod($fileDelete, 0777);
+                @unlink($fileDelete);
+            }
+        }
+        
+        return $this;
     }
 
     /**
