@@ -71,9 +71,6 @@ app
 │   └── User
 │       └── WelcomeMail.php
 ├── Models
-│   ├── Filters
-│   │   ├── BaseFilter.php
-│   │   └── FilterInterface.php
 │   ├── Traits
 │   │   └── ApiScopes.php
 │   └── User.php
@@ -98,6 +95,8 @@ app
     │       └── ApiParam.php
     ├── Helpers
     │   └── EmailService.php
+    ├── Traits
+    │   └── EloquentFilter.php
     └── Web
         ├── BaseService.php
         ├── Contracts

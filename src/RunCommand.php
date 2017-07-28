@@ -56,8 +56,8 @@ class RunCommand extends Command
             $output->writeln('<info>Creating Laravel skeleton...</info>');
 
             $this->download($zipFile = $this->makeFilename())
-                ->removeFiles($directory)
-                ->extract($zipFile, $directory)
+                ->removeFiles($directory, $output)
+                ->extract($zipFile, $directory, $output)
                 ->removeUserModel($directory)
                 ->cleanUp($zipFile);
 
@@ -81,14 +81,22 @@ class RunCommand extends Command
     }
 
     /**
-     * Delete old model User.php
+     * Delete files
+     *
+     * @param                      $directory
+     * @param OutputInterface|null $output
      *
      * @return $this
      */
-    protected function removeFiles($directory)
+    protected function removeFiles($directory, OutputInterface $output = null)
     {
         $deleteFileUrl = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/deleteFiles.txt';
         $deleteFile = file_get_contents($deleteFileUrl);
+
+        if ($output) {
+            $output->writeln('<info>Removing files...</info>');
+            $output->writeln($deleteFile);
+        }
 
         $files = preg_split('/\r\n|\r|\n/', $deleteFile, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -105,6 +113,8 @@ class RunCommand extends Command
 
     /**
      * Delete old model User.php
+     *
+     * @param $directory
      *
      * @return $this
      */
@@ -133,9 +143,11 @@ class RunCommand extends Command
     /**
      * Download the temporary Zip to the given file.
      *
-     * @param  string  $zipFile
-     * @param  string  $version
+     * @param  string $zipFile
+     * @param string  $url
+     *
      * @return $this
+     * @internal param string $version
      */
     protected function download($zipFile, $url = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/skeleton.zip')
     {
@@ -148,12 +160,18 @@ class RunCommand extends Command
     /**
      * Extract the Zip file into the given directory.
      *
-     * @param  string  $zipFile
-     * @param  string  $directory
+     * @param  string              $zipFile
+     * @param  string              $directory
+     * @param OutputInterface|null $output
+     *
      * @return $this
      */
-    protected function extract($zipFile, $directory)
+    protected function extract($zipFile, $directory, OutputInterface $output = null)
     {
+        if ($output) {
+            $output->writeln('<info>Extracting file...</info>');
+        }
+
         $archive = new ZipArchive;
         $archive->open($zipFile);
         $archive->extractTo($directory);
@@ -190,13 +208,17 @@ class RunCommand extends Command
     }
 
     /**
-     * @param $directory
+     * @param                      $directory
+     * @param InputInterface       $input
+     * @param OutputInterface|null $output
+     *
+     * @return $this
      */
-    protected function makeDocker($directory, InputInterface $input)
+    protected function makeDocker($directory, InputInterface $input, OutputInterface $output = null)
     {
         $url = 'https://raw.githubusercontent.com/framgia/laravel-skeleton/master/docker.zip';
         $this->download($zipFile = $this->makeDockerFilename(), $url)
-            ->extract($zipFile, $directory)
+            ->extract($zipFile, $directory, $output)
             ->cleanUp($zipFile);
 
         //create docker-compose.yml file
